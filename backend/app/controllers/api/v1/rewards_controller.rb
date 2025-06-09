@@ -1,0 +1,14 @@
+module Api
+  module V1
+    class RewardsController < ApplicationController
+      def index
+        render json: Reward.all
+      end
+
+      def show
+        reward = Reward.find(params[:id])
+        render json: reward
+      end
+    end
+  end
+end

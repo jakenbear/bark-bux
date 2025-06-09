@@ -1,0 +1,28 @@
+services:
+  - type: web
+    name: bark-bux-backend
+    env: ruby
+    rootDir: backend
+    buildCommand: |
+      bundle install
+      bundle exec rake db:migrate
+      bundle exec rake db:seed
+    startCommand: bundle exec puma -C config/puma.rb
+    repo: https://github.com/jakenbear/bark-bux
+    branch: main
+    plan: free
+    region: oregon
+    envVars:
+      - key: RAILS_ENV
+        value: production
+      - key: SECRET_KEY_BASE
+        value: 1a863cf62701900139f32eb43e690649eff1cdf2c6be5f2354da1b041eb9a7f47aa3e617ee62c98a42a806c40341fc7e6bba6d8ad8a2878377bc968fc2e859b6
+      - key: DATABASE_URL
+        fromDatabase:
+          name: bark_bux_db
+          property: connectionString
+
+databases:
+  - name: bark_bux_db
+    databaseName: bark_bux_production
+    region: oregon
