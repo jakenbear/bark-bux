@@ -1,3 +1,6 @@
+// Login.jsx
+// Simple mock login form using context and fake token auth.
+
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useAuth } from "../context/AuthContext";
@@ -13,24 +16,26 @@ function Login() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Redirect if already logged in
+  // Redirect to homepage if already logged in
   useEffect(() => {
     if (token && currentUser) {
       window.location.href = "/";
     }
   }, [token, currentUser, navigate, location.state]);
 
+  // Helper to create a fake token
   const generateMockToken = (email) => {
     return `mock-token-${email}-${Date.now()}`;
   };
 
+  // Handle form submission and mock login logic
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     setLoading(true);
 
     try {
-      // 1. Fetch all users (mock authentication)
+      // 1. Fetch all users (mock user lookup)
       const usersResponse = await axios.get(`${config.backendUrl}/api/v1/users`);
       const user = usersResponse.data.find((u) => u.email === email);
 
@@ -42,22 +47,22 @@ function Login() {
         throw new Error("Password must be at least 6 characters");
       }
 
-      // 2. Generate mock token
+      // 2. Create mock token
       const mockToken = generateMockToken(email);
 
-      // 3. Verify this user isn't already logged in elsewhere
+      // 3. Prevent duplicate logins
       if (currentUser && currentUser.email === email) {
         throw new Error("This user is already logged in");
       }
 
-      // 4. Log the user in
+      // 4. Set login state
       login(mockToken, user);
-      
-      // 5. Redirect with state management
+
+      // 5. Redirect after login
       navigate(location.state?.from || "/profile", {
         state: { newLogin: true }
       });
-      
+
     } catch (err) {
       console.error("Login error:", err);
       setError(err.response?.data?.message || err.message || "Login failed");
@@ -104,9 +109,7 @@ function Login() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Password
-            </label>
+            <label className="block text-sm font-medium text-gray-700">Password</label>
             <input
               type="password"
               className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"

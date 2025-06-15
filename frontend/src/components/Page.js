@@ -1,7 +1,10 @@
 // src/components/Page.js
+// Reusable layout wrapper that sets the page <title> dynamically using react-helmet
+
 import React from "react";
 import { Helmet } from "react-helmet";
 
+// Adds dynamic page title and renders child components
 const Page = ({ title, children }) => (
   <>
     <Helmet>
@@ -12,3 +15,4 @@ const Page = ({ title, children }) => (
 );
 
 export default Page;
+

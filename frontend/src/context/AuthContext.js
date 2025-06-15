@@ -1,15 +1,24 @@
+// src/context/AuthContext.js
+// Provides authentication state and helpers (login, logout, update user) across the app.
+// Manages token and currentUser state synced with localStorage.
+// Handles initial auth loading and updates user info securely with backend.
+
 import { createContext, useContext, useState, useEffect, useCallback } from "react";
 import axios from "axios";
 
 const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
+  // Auth token string (e.g., JWT) used for authenticated requests
   const [token, setToken] = useState(null);
+  // Current authenticated user object with details (id, name, email, points, etc.)
   const [currentUser, setCurrentUser] = useState(null);
+  // Loading flag while initializing auth state from localStorage
   const [loading, setLoading] = useState(true);
 
   const backendUrl = process.env.REACT_APP_BACKEND_URL || "http://localhost:3001";
 
+  // Initialize auth state on mount from localStorage
   useEffect(() => {
     const initializeAuth = async () => {
       const storedToken = localStorage.getItem("token");
@@ -22,15 +31,17 @@ export function AuthProvider({ children }) {
           setCurrentUser(userData);
         } catch (error) {
           console.error("Failed to parse stored user data", error);
-          logout();
+          logout(); // Clear invalid auth data
         }
       }
-      setLoading(false);
+      setLoading(false); // Done initializing
     };
 
     initializeAuth();
   }, []);
 
+  // Login function: sets token and user data in state and localStorage
+  // Returns true if successful, false on error
   const login = async (mockToken, userData) => {
     try {
       if (!mockToken || !userData?.id) {
@@ -44,11 +55,13 @@ export function AuthProvider({ children }) {
       return true;
     } catch (error) {
       console.error("Login failed:", error);
-      logout();
+      logout(); // Ensure clean state on failure
       return false;
     }
   };
 
+  // Logout function: clears auth state and localStorage
+  // Returns true if successful, false on error
   const logout = () => {
     try {
       localStorage.removeItem("token");
@@ -62,6 +75,10 @@ export function AuthProvider({ children }) {
     }
   };
 
+  // Updates currentUser state by fetching fresh user data from backend
+  // Uses token for Authorization header
+  // Updates localStorage only if user data changed (shallow compare)
+  // Logs out user if unauthorized (401)
   const updateUser = useCallback(async (userId) => {
     try {
       if (!token) throw new Error("Not authenticated");
@@ -74,7 +91,6 @@ export function AuthProvider({ children }) {
 
       const userData = response.data;
 
-      // Only update state if data has changed
       setCurrentUser((prev) => {
         if (
           prev &&
@@ -83,7 +99,7 @@ export function AuthProvider({ children }) {
           prev.email === userData.email &&
           prev.points === userData.points
         ) {
-          return prev; // No update needed
+          return prev; // No changes, keep current state
         }
         localStorage.setItem("currentUser", JSON.stringify(userData));
         return userData;
@@ -97,7 +113,7 @@ export function AuthProvider({ children }) {
       }
       throw error;
     }
-  }, [token]); // Depend on token to re-create updateUser if token changes
+  }, [token]);
 
   return (
     <AuthContext.Provider
@@ -115,6 +131,7 @@ export function AuthProvider({ children }) {
   );
 }
 
+// Custom hook to consume AuthContext
 export function useAuth() {
   const context = useContext(AuthContext);
   if (!context) {

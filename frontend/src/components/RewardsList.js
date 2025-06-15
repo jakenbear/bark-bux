@@ -1,3 +1,8 @@
+// src/components/RewardsList.js
+// Displays available rewards and allows users to redeem them.
+// Fetches current user and rewards data on mount,
+// updates UI and user points after redemption with confetti celebration.
+
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import config from "../config";
@@ -8,6 +13,7 @@ function RewardsList() {
   const [rewards, setRewards] = useState([]);
   const [user, setUser] = useState(null);
 
+  // Load current user from localStorage and fetch updated user and rewards data
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem("currentUser"));
     if (storedUser) {
@@ -23,6 +29,7 @@ function RewardsList() {
     });
   }, []);
 
+  // Handle redeeming a reward: create redemption, update UI and user points, show success message
   const redeemReward = (rewardId) => {
     axios
       .post(`${config.backendUrl}/api/v1/redemptions`, {
@@ -33,6 +40,7 @@ function RewardsList() {
         toast.success("🎉 Reward redeemed!");
         launchConfetti();
 
+        // Update reward stock locally
         setRewards((prevRewards) =>
           prevRewards.map((reward) =>
             reward.id === rewardId
@@ -41,6 +49,7 @@ function RewardsList() {
           )
         );
 
+        // Refresh user data to update points balance
         axios
           .get(`${config.backendUrl}/api/v1/users/${user.id}`)
           .then((res) => setUser(res.data));
@@ -50,6 +59,7 @@ function RewardsList() {
       );
   };
 
+  // Launch confetti animation on successful redemption
   const launchConfetti = () => {
     confetti({
       particleCount: 100,
