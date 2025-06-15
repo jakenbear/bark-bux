@@ -137,6 +137,12 @@ rails db:seed
   - `reward.rb`: Manages rewards
   - `redemption.rb`: Links users and rewards, handles logic
 
+- **Controllers** (`app/controllers/api/v1/`):
+  - `users_controller.rb`: Manages user data and redemption history 🐶.
+  - `rewards_controller.rb`: Handles reward browsing 🦴.
+  - `redemptions_controller.rb`: Processes reward redemptions with error handling 🎉.
+- **Routes** (`config/routes.rb`): Defines RESTful API endpoints under `api/v1` 📬.
+
 - **Database**
   - `config/database.yml`
   - `db/schema.rb`
