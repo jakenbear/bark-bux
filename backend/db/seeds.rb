@@ -1,7 +1,4 @@
 # db/seeds.rb
-
-# Optional: Clear existing data for a clean start
-# Uncomment with caution
 Redemption.delete_all
 User.delete_all
 Reward.delete_all
@@ -9,15 +6,17 @@ Reward.delete_all
 puts "Seeding users..."
 
 users = [
-  { name: "Jake Reardon", email: "jakenbear@gmail.com" },
-  { name: "Mitch Marner", email: "mitch.marner@leafs.com" },
-  { name: "Morgan Patel", email: "morgan.patel@example.com" }
+  { name: "Jake Reardon", email: "jakenbear@gmail.com", password: "password123" },
+  { name: "Mitch Marner", email: "mitch.marner@leafs.com", password: "password123" },
+  { name: "Morgan Patel", email: "morgan.patel@example.com", password: "password123" }
 ]
 
 users.each do |attrs|
   User.find_or_create_by!(email: attrs[:email]) do |user|
     user.name = attrs[:name]
     user.points = 25_000
+    user.password = attrs[:password]
+    user.password_confirmation = attrs[:password]
   end
 end
 
@@ -65,5 +64,3 @@ rewards.each do |attrs|
 end
 
 puts "Seeding complete!"
-
-

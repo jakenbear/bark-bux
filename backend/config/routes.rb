@@ -1,26 +1,16 @@
 # config/routes.rb
-# Defines API routes for versioned endpoints and a basic health check.
-
 Rails.application.routes.draw do
+  # Devise needs to be mounted outside the API namespace
+  devise_for :users
+
   namespace :api do
-    namespace :v1 do
-      # User endpoints (list and detail)
-      resources :users, only: [:index, :show]
-
-      # Reward endpoints (list and detail)
-      resources :rewards, only: [:index, :show]
-
-      # Redemption endpoint (create only)
-      resources :redemptions, only: [:create]
-
-      # Custom route to fetch a user's redemption history
-      get "users/:id/redemptions", to: "users#redemptions"
-    end
+  namespace :v1 do
+    resources :rewards, only: [:index, :show]
+    resources :users, only: [:show]  # Remove the redemptions member route
+    resources :redemptions, only: [:index, :create]  # Add index action
+    post "/login", to: "sessions#create"
+    delete "/logout", to: "sessions#destroy"
   end
-
-  # Simple health check endpoint
-  get "up" => "rails/health#show", as: :rails_health_check
-
-  # Uncomment and set your root route here if needed
-  # root "posts#index"
 end
+end
+

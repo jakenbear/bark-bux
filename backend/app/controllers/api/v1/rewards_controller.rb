@@ -1,20 +1,25 @@
 # app/controllers/api/v1/rewards_controller.rb
-# Exposes reward data through API endpoints.
-
 module Api
   module V1
-    class RewardsController < ApplicationController
-      # Returns a list of all rewards
+    class RewardsController < V1Controller
       def index
-        render json: Reward.all
+        rewards = Rails.cache.fetch("rewards_available", expires_in: 1.hour) do
+          Reward.available.to_a
+        end
+        
+        if rewards.any?
+          render json: rewards, each_serializer: RewardSerializer, status: :ok
+        else
+          render json: { rewards: [] }, status: :ok
+        end
       end
 
-      # Returns details for a specific reward
       def show
         reward = Reward.find(params[:id])
-        render json: reward
+        render json: reward, serializer: RewardSerializer
+      rescue ActiveRecord::RecordNotFound
+        render json: { error: "Reward not found" }, status: :not_found
       end
     end
   end
 end
-
