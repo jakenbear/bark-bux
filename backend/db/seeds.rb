@@ -1,7 +1,8 @@
 # db/seeds.rb
-Redemption.delete_all
-User.delete_all
-Reward.delete_all
+# Use to reset DB, will also reset DB on Render per deploy
+#Redemption.delete_all
+#User.delete_all
+#Reward.delete_all
 
 puts "Seeding users..."
 
