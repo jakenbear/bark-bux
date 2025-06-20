@@ -12,7 +12,7 @@ module Api
         if auth_header && auth_header.match(/^Bearer\s+(.+)$/)
           token = $1.strip
           begin
-            decoded = JWT.decode(token, Rails.application.credentials.secret_key_base, true, { algorithm: "HS256" })
+            decoded = JWT.decode(token, ENV["SECRET_KEY_BASE"], true, { algorithm: "HS256" })
             payload = decoded[0]
             @current_user = User.find_by(id: payload["user_id"])
 
