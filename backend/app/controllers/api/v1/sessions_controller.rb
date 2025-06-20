@@ -9,8 +9,7 @@ module Api
         user = User.find_by(email: params[:email]&.downcase)
         if user&.valid_password?(params[:password])
           payload = { user_id: user.id, exp: 24.hours.from_now.to_i }
-          token = JWT.encode(payload, Rails.application.credentials.secret_key_base, "HS256")
-          Rails.logger.debug "Generated JWT for user: #{user.id} with token: #{token[0..20]}..."
+          token = JWT.encode(payload, ENV.fetch("SECRET_KEY_BASE"), "HS256")
           render json: { user: user.as_json(only: [:id, :email, :name, :points]), token: token }, status: :ok
         else
           Rails.logger.debug "Login failed for email: #{params[:email]}"
