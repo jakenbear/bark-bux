@@ -24,34 +24,58 @@ puts "Seeding rewards..."
 
 rewards = [
   {
-    name: "Amazon Gift Card",
-    description: "$25 Amazon e-Gift Card",
+    name: "Chewy Gift Card",
+    description: "$25 Chewy e-Gift Card",
     points: 250,
     stock: 20
   },
   {
-    name: "Bluetooth Headphones",
-    description: "Wireless over-ear headphones",
-    points: 1200,
-    stock: 5
+    name: "Bark & Chill Hoodie",
+    description: "Cozy hoodie with dog-lover design",
+    points: 800,
+    stock: 8
   },
   {
-    name: "Coffee Subscription",
-    description: "3-month subscription to premium coffee",
+    name: "Pupflix Subscription",
+    description: "3-month access to dog-themed content",
     points: 750,
     stock: 10
   },
   {
-    name: "Desk Plant",
-    description: "Live plant for your workspace",
+    name: "Pawsitive Vibes Mug",
+    description: "Ceramic mug with dog quote",
     points: 300,
     stock: 15
   },
   {
-    name: "Branded Hoodie",
-    description: "Bark-Bux logo hoodie (unisex)",
-    points: 800,
-    stock: 8
+    name: "Snooze Buddy Blanket",
+    description: "Soft fleece blanket with paw prints",
+    points: 600,
+    stock: 12
+  },
+  {
+    name: "Dog Park Adventure Kit",
+    description: "Tote with ball, frisbee, and treats",
+    points: 1200,
+    stock: 5
+  },
+  {
+    name: "Treat Yo’ Self Jar",
+    description: "Glass treat jar with cute label",
+    points: 450,
+    stock: 10
+  },
+  {
+    name: "Tail Wagger Cap",
+    description: "Adjustable cap with embroidered dog",
+    points: 350,
+    stock: 14
+  },
+  {
+    name: "Good Dog Candle",
+    description: "Scented candle with calming aroma",
+    points: 500,
+    stock: 10
   }
 ]
 
