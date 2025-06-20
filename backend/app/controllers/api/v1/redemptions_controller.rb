@@ -4,12 +4,12 @@ module Api
       before_action :authenticate_user!
       
       def index
-  redemptions = current_user.redemptions
-                           .includes(:reward)
-                           .order(created_at: :desc)
-  
-  render json: redemptions, each_serializer: RedemptionSerializer
-end
+        redemptions = current_user.redemptions
+                                 .includes(:reward)
+                                 .order(created_at: :desc)
+        
+        render json: redemptions, each_serializer: RedemptionSerializer
+      end
 
       def create
         idempotency_key = request.headers["Idempotency-Key"] || SecureRandom.uuid
@@ -23,7 +23,7 @@ end
         end
 
         reward = Reward.find(params[:reward_id])
-        
+
         unless current_user.points >= reward.points && reward.stock > 0
           return render json: { 
             status: "error",
@@ -31,13 +31,27 @@ end
           }, status: :unprocessable_entity
         end
 
-        RedemptionJob.perform_later(current_user.id, reward.id, idempotency_key)
-        
-        render json: {
-          status: "queued",
-          message: "Redemption processing",
-          idempotency_key: idempotency_key
-        }, status: :accepted
+        begin
+          success = RedemptionService.new(current_user, reward, idempotency_key).redeem
+
+          if success
+            redemption = Redemption.find_by(idempotency_key: idempotency_key)
+            render json: {
+              status: "success",
+              redemption: format_single_redemption(redemption)
+            }, status: :ok
+          else
+            render json: {
+              status: "error",
+              error: "Redemption failed"
+            }, status: :unprocessable_entity
+          end
+        rescue => e
+          render json: {
+            status: "error",
+            error: e.message
+          }, status: :unprocessable_entity
+        end
       rescue ActiveRecord::RecordNotFound
         render json: { 
           status: "error",
