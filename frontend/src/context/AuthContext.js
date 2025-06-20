@@ -13,17 +13,13 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     const fetchCurrentUser = async () => {
       if (!token) {
-        console.log("No token in state, skipping fetchUser");
         setLoading(false);
         return;
       }
       try {
-        console.log("Fetching user from /api/v1/users/me");
         const user = await fetchUser();
-        console.log("Fetch user response:", user);
         setCurrentUser(user);
       } catch (error) {
-        console.error("Fetch user error:", error.response?.data || error.message);
         setCurrentUser(null);
         setToken(null);
         localStorage.removeItem("authToken");
@@ -35,38 +31,29 @@ export function AuthProvider({ children }) {
   }, [token]);
 
   const login = async ({ email, password }) => {
-    try {
-      console.log("Logging in with:", { email });
-      const response = await api.post("/api/v1/login", { email, password });
-      console.log("Login response:", response.data);
-      setCurrentUser(response.data.user);
-      setToken(response.data.token);
-      localStorage.setItem("authToken", response.data.token);
-      console.log("Stored token in localStorage:", response.data.token);
-      return response.data;
-    } catch (error) {
-      console.error("Login error:", error.response?.data || error.message);
-      throw error;
-    }
+    const response = await api.post("/api/v1/login", { email, password });
+    setCurrentUser(response.data.user);
+    setToken(response.data.token);
+    localStorage.setItem("authToken", response.data.token);
+    return response.data;
   };
 
   const logout = async () => {
     try {
-      console.log("Logging out");
       await api.delete("/api/v1/logout");
-      console.log("Logout successful");
     } catch (error) {
-      console.error("Logout error:", error.response?.data || error.message);
+      // optionally handle error silently
     } finally {
       setCurrentUser(null);
       setToken(null);
       localStorage.removeItem("authToken");
-      console.log("Cleared token from localStorage");
     }
   };
 
   return (
-    <AuthContext.Provider value={{ currentUser, token, login, logout, loading }}>
+    <AuthContext.Provider
+      value={{ currentUser, token, login, logout, loading }}
+    >
       {children}
     </AuthContext.Provider>
   );

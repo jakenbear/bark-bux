@@ -15,4 +15,3 @@ const Page = ({ title, children }) => (
 );
 
 export default Page;
-

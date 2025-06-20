@@ -1,6 +1,11 @@
 // src/App.js
-import React, { lazy, Suspense } from "react";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { lazy, Suspense } from "react";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import { QueryProvider } from "./api/api";
@@ -27,8 +32,22 @@ function App() {
               <Suspense fallback={<div className="p-4">Loading...</div>}>
                 <Routes>
                   <Route path="/login" element={<Login />} />
-                  <Route path="/rewards" element={<ProtectedRoute><RewardsList /></ProtectedRoute>} />
-                  <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+                  <Route
+                    path="/rewards"
+                    element={
+                      <ProtectedRoute>
+                        <RewardsList />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/profile"
+                    element={
+                      <ProtectedRoute>
+                        <Profile />
+                      </ProtectedRoute>
+                    }
+                  />
                   <Route path="/" element={<Home />} />
                 </Routes>
               </Suspense>

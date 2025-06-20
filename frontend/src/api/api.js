@@ -14,16 +14,16 @@ export const fetchRewards = async () => {
 };
 
 export const fetchRedemptions = async () => {
-  const response = await api.get('/api/v1/redemptions');
+  const response = await api.get("/api/v1/redemptions");
   return response.data || [];
 };
 
 export const redeemReward = async (rewardId) => {
-  const idempotencyKey = crypto.randomUUID();
+  const idempotencyKey = globalThis.crypto.randomUUID();
   const response = await api.post(
-    '/api/v1/redemptions', 
+    "/api/v1/redemptions",
     { reward_id: rewardId },
-    { headers: { "Idempotency-Key": idempotencyKey } }
+    { headers: { "Idempotency-Key": idempotencyKey } },
   );
   return response.data;
 };
@@ -39,5 +39,7 @@ export const queryClient = new QueryClient({
 
 // Wrap app with QueryClientProvider in App.js
 export function QueryProvider({ children }) {
-  return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>;
+  return (
+    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+  );
 }

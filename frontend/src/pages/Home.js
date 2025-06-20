@@ -144,7 +144,7 @@ function Home() {
         </h3>
         {/* Alternative: Uncomment to add logo here */}
         {/* <img src="/bblogo.png" alt="Bark Bux Logo" className="mx-auto mb-4 w-24 h-auto opacity-80 hover:scale-110 transition-transform duration-300" /> */}
-        
+
         {/* Button linking to profile if logged in, otherwise login */}
         <Link
           to={token ? "/profile" : "/login"}
