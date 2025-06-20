@@ -2,32 +2,58 @@ default: &default
   adapter: postgresql
   encoding: unicode
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  host: localhost
-  username: <%= ENV["DB_USERNAME"] || "postgres" %>
-  password: <%= ENV["DB_PASSWORD"] || "" %>
 
 development:
   <<: *default
+  <% if ENV['DATABASE_URL'] %>
+  url: <%= ENV['DATABASE_URL'] %>
+  <% else %>
+  host: localhost
+  username: <%= ENV["DB_USERNAME"] || "postgres" %>
+  password: <%= ENV["DB_PASSWORD"] || "" %>
   database: bark_bux_development
+  <% end %>
 
 test:
   <<: *default
+  <% if ENV['DATABASE_URL'] %>
+  url: <%= ENV['DATABASE_URL'] %>
+  <% else %>
+  host: localhost
+  username: <%= ENV["DB_USERNAME"] || "postgres" %>
+  password: <%= ENV["DB_PASSWORD"] || "" %>
   database: bark_bux_test
+  <% end %>
 
 production:
   <<: *default
-  database: bark_bux_production
+  <% if ENV['DATABASE_URL'] %>
+  url: <%= ENV['DATABASE_URL'] %>
+  <% else %>
+  host: localhost
   username: <%= ENV["DB_USERNAME"] %>
   password: <%= ENV["DB_PASSWORD"] %>
+  database: bark_bux_production
+  <% end %>
 
 queue:
   <<: *default
-  database: bark_bux_production
+  <% if ENV['DATABASE_URL'] %>
+  url: <%= ENV['DATABASE_URL'] %>
+  <% else %>
+  host: localhost
   username: <%= ENV["DB_USERNAME"] %>
   password: <%= ENV["DB_PASSWORD"] %>
+  database: bark_bux_production
+  <% end %>
 
 cache:
   <<: *default
-  database: bark_bux_production
+  <% if ENV['DATABASE_URL'] %>
+  url: <%= ENV['DATABASE_URL'] %>
+  <% else %>
+  host: localhost
   username: <%= ENV["DB_USERNAME"] %>
   password: <%= ENV["DB_PASSWORD"] %>
+  database: bark_bux_production
+  <% end %>
