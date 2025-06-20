@@ -1,7 +1,11 @@
 # config/initializers/cors.rb
+
+frontend_url = ENV.fetch("FRONTEND_URL", "http://localhost:3000")
+
 Rails.application.config.middleware.insert_before 0, Rack::Cors do
   allow do
-    origins "http://localhost:3000"
+    origins frontend_url
+
     resource "*",
       headers: :any,
       methods: [:get, :post, :put, :patch, :delete, :options, :head],
